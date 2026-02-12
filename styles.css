@@ -21,14 +21,20 @@ body {
 }
 
 .cell {
-    border: 2px solid #3a3a3c;
     color: whitesmoke;
+    border: 2px solid #3a3a3c;
     display: flex;
     justify-content: center;
     align-items: center;
     font-weight: 900;
     font-size: 2.5rem;
     line-height: 1;
+    transition: transform 0.15s ease, background 0.2s;
+    transform-style: preserve-3d;
+}
+
+.cell.pop {
+    transform: scale(1.2);
 }
 
 input {
@@ -50,3 +56,21 @@ button {
 .hidden {
     visibility: hidden;
 }
+
+#win-message {
+    font-size: 2rem;
+    font-weight: bold;
+    text-align: center;
+    opacity: 0;
+    transition: opacity 2s;
+  }
+  @keyframes rainbow {
+    0% { color: red; }
+    25% { color: orange; }
+    50% { color: green; }
+    75% { color: blue; }
+    75% { color: violet; }
+  }
+  .rainbow {
+    animation: rainbow 10s linear infinite;
+  }

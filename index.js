@@ -1,21 +1,18 @@
-
 document.addEventListener("DOMContentLoaded", () => {
     const target = "HORSE";
     let row = 0;
-    let winner = false;
-    console.log("winner is false");
+    let gameOver = false;
     const form = document.querySelector("form");
     const input = document.querySelector("input");
     const cells = document.querySelectorAll(".cell");
     const msg = document.getElementById("message");
+    const winMsg = document.getElementById("win-message");
     const button = document.querySelector("button");
-
 
     form.addEventListener("submit", e => {
         e.preventDefault();
         const word = input.value.trim().toUpperCase();
-        if (winner === true) {
-            console.log("winner reset");
+        if (gameOver === true) {
             resetGame();
             return;
         }
@@ -25,17 +22,20 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
+        // Clear message
+        msg.textContent = "";
+        msg.classList.add("hidden");
+
+        // Split arrays for comparison
         const targetArr = target.split("");
         const guessArr = word.split("");
         const used = Array(5).fill(false);
+        const colors = Array(5).fill("");
 
         // First pass: greens
         for (let i = 0; i < 5; i++) {
-            const cell = cells[row * 5 + i];
-            cell.textContent = guessArr[i];
-
             if (guessArr[i] === targetArr[i]) {
-                cell.style.background = "green";
+                colors[i] = "green";
                 used[i] = true;
                 guessArr[i] = null;
             }
@@ -44,26 +44,62 @@ document.addEventListener("DOMContentLoaded", () => {
         // Second pass: yellows
         for (let i = 0; i < 5; i++) {
             if (!guessArr[i]) continue;
-
             const index = targetArr.findIndex((l, idx) => l === guessArr[i] && !used[idx]);
             if (index !== -1) {
-                cells[row * 5 + i].style.background = "goldenrod";
+                colors[i] = "goldenrod";
                 used[index] = true;
             }
         }
 
-        // Hide message
-        msg.textContent = "";
-        msg.classList.add("hidden");
-
-        // Check if winner
-        if (word == target) {
-            gameOver();
+        // Animate letters one by one
+        input.disabled = true;
+        button.disabled = true;
+        for (let i = 0; i < 5; i++) {
+            setTimeout(() => {
+                const cell = cells[row * 5 + i];
+                cell.textContent = word[i];
+                cell.style.background = colors[i] || "";
+                // Flip + pop animation
+                cell.style.transform = "rotateX(90deg) scale(1.2)";
+                setTimeout(() => {
+                    cell.style.transform = "rotateX(0deg) scale(1)";
+                }, 150);
+            }, i * 200);
         }
 
-        row++;
-        input.value = "";
+        setTimeout(() => {
+            // Winner check
+            if (word === target) {
+                gameOver = true;
+                input.disabled = true;
+                button.disabled = false;
+                button.textContent = "New Game";
+                winMsg.textContent = "a winner is you";
+                winMsg.style.opacity = 1;
+                winMsg.classList.add("rainbow");
+            } else if (row === 5) { // sixth row just finished
+                gameOver = true;
+                input.disabled = true;
+                button.disabled = false;
+                button.textContent = "New Game";
+                winMsg.textContent = "you lose";
+                winMsg.style.opacity = 1;
+                winMsg.classList.add("rainbow");
+            }
+            else {
+                // Re-enable input/button for next guess
+                input.disabled = false;
+                button.disabled = false;
+                input.focus();
+            }
+        }, 5 * 200 + 200); // after animations
+
+        setTimeout(() => {
+            row++;
+            input.value = "";
+        }, 5 * 200 + 200); // matches the animation delay
     });
+
     function showNotEnoughLetters() {
         msg.textContent = "Not enough letters";
         msg.style.color = "red";
@@ -71,21 +107,12 @@ document.addEventListener("DOMContentLoaded", () => {
         input.value = "";
     }
 
-    function gameOver() {
-        winner = true;
-        console.log("winner is true");
-
-
-
-        input.disabled = true;
-        button.textContent = "New Game";
-    }
-
     function resetGame() {
         // Clear grid
         cells.forEach(cell => {
             cell.textContent = "";
             cell.style.background = "";
+            cell.style.transform = "";
         });
 
         // Reset input + button
@@ -96,10 +123,11 @@ document.addEventListener("DOMContentLoaded", () => {
         // Hide message
         msg.textContent = "";
         msg.classList.add("hidden");
+        winMsg.textContent = "";
+
 
         row = 0;
-        winner = false;
-        console.log("winner is false");
-        return;
+        gameOver = false;
     }
+
 });
