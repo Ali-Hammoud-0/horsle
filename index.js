@@ -22,17 +22,17 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        // Clear message
+        // clear message
         msg.textContent = "";
         msg.classList.add("hidden");
 
-        // Split arrays for comparison
+        // split arrays for comparison
         const targetArr = target.split("");
         const guessArr = word.split("");
         const used = Array(5).fill(false);
         const colors = Array(5).fill("");
 
-        // First pass: greens
+        // first pass: greens
         for (let i = 0; i < 5; i++) {
             if (guessArr[i] === targetArr[i]) {
                 colors[i] = "green";
@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
 
-        // Second pass: yellows
+        // second pass: yellows
         for (let i = 0; i < 5; i++) {
             if (!guessArr[i]) continue;
             const index = targetArr.findIndex((l, idx) => l === guessArr[i] && !used[idx]);
@@ -51,7 +51,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
 
-        // Animate letters one by one
+        // animate letter
         input.disabled = true;
         button.disabled = true;
         for (let i = 0; i < 5; i++) {
@@ -59,7 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 const cell = cells[row * 5 + i];
                 cell.textContent = word[i];
                 cell.style.background = colors[i] || "";
-                // Flip + pop animation
+                // cool animation
                 cell.style.transform = "rotateX(90deg) scale(1.2)";
                 setTimeout(() => {
                     cell.style.transform = "rotateX(0deg) scale(1)";
@@ -68,36 +68,31 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         setTimeout(() => {
-            // Winner check
+            // winner/loser check
             if (word === target) {
                 gameOver = true;
                 input.disabled = true;
-                button.disabled = false;
                 button.textContent = "New Game";
                 winMsg.textContent = "a winner is you";
                 winMsg.style.opacity = 1;
                 winMsg.classList.add("rainbow");
-            } else if (row === 5) { // sixth row just finished
+            } else if (row === 5) {
                 gameOver = true;
                 input.disabled = true;
-                button.disabled = false;
                 button.textContent = "New Game";
                 winMsg.textContent = "you lose";
                 winMsg.style.opacity = 1;
                 winMsg.classList.add("rainbow");
             }
             else {
-                // Re-enable input/button for next guess
+                // reenable input for next guess
                 input.disabled = false;
-                button.disabled = false;
                 input.focus();
             }
-        }, 5 * 200 + 200); // after animations
-
-        setTimeout(() => {
+            button.disabled = false;
             row++;
             input.value = "";
-        }, 5 * 200 + 200); // matches the animation delay
+        }, 5 * 200 + 200); // after animations
     });
 
     function showNotEnoughLetters() {
