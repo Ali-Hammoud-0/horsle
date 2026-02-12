@@ -1,0 +1,52 @@
+body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #121213;
+    font-family: sans-serif;
+}
+
+.wrap {
+    text-align: center;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(5, 60px);
+    grid-template-rows: repeat(6, 60px);
+    gap: 5px;
+    margin-bottom: 20px;
+}
+
+.cell {
+    border: 2px solid #3a3a3c;
+    color: whitesmoke;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 900;
+    font-size: 2.5rem;
+    line-height: 1;
+}
+
+input {
+    padding: 8px;
+    font-size: 16px;
+    text-transform: uppercase;
+}
+
+button {
+    padding: 8px 12px;
+    font-size: 16px;
+}
+
+#message {
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.hidden {
+    visibility: hidden;
+}
